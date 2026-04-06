@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Storyboard</title>
+</head>
+<body>
+
+<h2>Generated Storyboard</h2>
+
+{% for item in results %}
+    <div>
+        <img src="{{ item.image }}" width="300"><br>
+        <p>{{ item.text }}</p>
+    </div>
+    <hr>
+{% endfor %}
+
+</body>
+</html>
