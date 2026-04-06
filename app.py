@@ -25,7 +25,7 @@ def generate():
         prompt = enhance_prompt(seg)
 
         # Step 3: generate image
-        image_url = generate_image(prompt)
+        image_url = generate_image(seg)
 
         results.append({
             "text": seg,

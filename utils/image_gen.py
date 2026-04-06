@@ -1,5 +1,5 @@
-import os
+import urllib.parse
 
-def generate_image(prompt):
-    # simple placeholder (since API key required)
-    return f"https://via.placeholder.com/512?text={prompt[:20]}"
+def generate_image(text):
+    safe_text = urllib.parse.quote(text[:40])
+    return f"https://dummyimage.com/512x512/000/fff&text={safe_text}"
