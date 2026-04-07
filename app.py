@@ -1,7 +1,6 @@
 import os
 import json
 from flask import Flask, render_template, request, Response, stream_with_context, send_from_directory
-from dotenv import load_dotenv
 
 from utils.segment import segment_text
 from utils.prompt_engine import enhance_prompt, STYLE_DESCRIPTORS
@@ -9,10 +8,14 @@ from utils.image_gen import generate_image
 from utils.empathy_engine import detect_emotion, get_voice_parameters
 from utils.voice_gen import generate_voice
 
-load_dotenv()
-
 app = Flask(__name__)
 app.config['AUDIO_FOLDER'] = os.path.join(app.root_path, 'static', 'audio')
+app.config['OUTPUT_FOLDER'] = os.path.join(app.root_path, 'static', 'output')
+
+# Ensure local directories exist
+for folder in [app.config['AUDIO_FOLDER'], app.config['OUTPUT_FOLDER']]:
+    if not os.path.exists(folder):
+        os.makedirs(folder)
 
 STYLES = list(STYLE_DESCRIPTORS.keys())
 
@@ -20,7 +23,6 @@ STYLES = list(STYLE_DESCRIPTORS.keys())
 
 @app.route('/')
 def home():
-    # Landing page is the Pitch Visualizer by default
     return render_template("index.html", styles=STYLES)
 
 @app.route('/empathy')
@@ -31,7 +33,7 @@ def empathy_ui():
 
 @app.route('/generate-stream', methods=['POST'])
 def generate_stream():
-    """SSE endpoint for Pitch Visualizer."""
+    """SSE endpoint for local Pitch Visualizer."""
     text = request.form.get("text", "").strip()
     style = request.form.get("style", "Cinematic")
 
@@ -46,7 +48,9 @@ def generate_stream():
 
         for idx, seg in enumerate(segments):
             print(f"[Pitch] Panel {idx+1}/{total}: {seg[:30]}")
+            # Local prompt enrichment (previously Gemini)
             prompt = enhance_prompt(seg, style)
+            # Local image generation (previously Pollinations)
             image_url = generate_image(prompt, style)
             panel = {
                 "type": "panel",
@@ -70,7 +74,7 @@ def generate_stream():
 
 @app.route('/process-empathy', methods=['POST'])
 def process_empathy():
-    """API endpoint for Empathy Engine."""
+    """API endpoint for local Empathy Engine."""
     text = request.form.get("text", "").strip()
     if not text:
         return json.dumps({"error": "No text provided"}), 400
@@ -93,6 +97,11 @@ def process_empathy():
 @app.route('/audio/<filename>')
 def serve_audio(filename):
     return send_from_directory(app.config['AUDIO_FOLDER'], filename)
+
+@app.route('/get-image/<filename>')
+def serve_image(filename):
+    """Serve locally generated storyboard images."""
+    return send_from_directory(app.config['OUTPUT_FOLDER'], filename)
 
 if __name__ == "__main__":
     app.run(debug=True)

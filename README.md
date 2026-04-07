@@ -1,32 +1,28 @@
-# 🌐 Global Challenge Hub
+# 🌐 Local-First Global Challenge Hub
 
-This repository contains completions for two major AI challenges: **The Empathy Engine** and **The Pitch Visualizer**. Both are integrated into a single Flask application with a modern, glassmorphic UI.
+This project provides a robust implementation of **The Empathy Engine** and **The Pitch Visualizer**, fully refactored to run **100% locally**. No external APIs (Google Gemini, Pollinations, OpenAI, etc.) are used, ensuring total privacy and offline capability.
 
 ---
 
 ## 🎭 Challenge 1: The Empathy Engine
-A service that analysises source text for emotional sentiment and generates a modulated human-like voice.
+A local service that analysises source text for emotional sentiment and generates a modulated human-like voice.
 
-### Features
-- **Emotion Detection**: Classifies text into Positive, Negative, or Neutral using VADER.
-- **Vocal Modulation**: Programmatically alters **Rate**, **Pitch**, and **Volume** based on emotion.
-- **Audio Output**: Generates playable `.wav` files via `pyttsx3`.
-- **Intensity Scaling**: Modulation degree varies with the detected sentiment strength.
-
-### Usage
-Run the app and navigate to the **Empathy Engine** tab. Type emotional text and click **Analyse & Speak**.
+### Local-First Features
+- **Emotion Detection**: Classifies text into Positive, Negative, or Neutral using `vaderSentiment`.
+- **Vocal Modulation**: Programmatically alters **Rate** and **Volume** based on emotion via `pyttsx3`.
+- **No API Keys**: Works instantly out of the box.
 
 ---
 
 ## 🎬 Challenge 2: The Pitch Visualizer
-A tool that converts sales narratives into multi-panel visual storyboards.
+A local tool that converts sales narratives into multi-panel visual storyboards using Hugging Face models.
 
-### Features
-- **Narrative Segmentation**: Intelligent sentence splitting via NLTK.
-- **LLM Prompt Engineering**: Uses Google Gemini 1.5 Flash to refine text into visual prompts.
-- **AI Image Generation**: Powered by Pollinations.AI (free, zero-config).
-- **Dynamic UI**: Storyboard panels stream in one-by-one using SSE.
-- **Visual Styles**: 5 curated artistic styles (Cinematic, Watercolor, Comic Book, etc.).
+### Local-First Features
+- **Narrative Segmentation**: Intelligent sentence splitting via NLTK (local).
+- **Intelligent Prompt Enrichment**: A local expansion engine that transforms narrative text into rich visual prompts using style-specific descriptors.
+- **Local Image Generation**: Powered by **Hugging Face `diffusers`**. 
+  - *Note*: Runs on CPU by default. Generation time is approximately 1-2 minutes per panel depending on hardware.
+- **Dynamic UI**: Panels appear in real-time as they are processed locally.
 
 ---
 
@@ -37,37 +33,31 @@ A tool that converts sales narratives into multi-panel visual storyboards.
 pip install -r requirements.txt
 ```
 
-### 2. Configure Environment
-Copy `.env.example` to `.env` and add your `GEMINI_API_KEY`:
-```
-GEMINI_API_KEY=your_key_here
-```
-> **Note**: The app works without a key using a template-based prompt fallback.
-
-### 3. Run the Application
+### 2. Run the Application
 ```bash
 python app.py
 ```
-Visit **http://127.0.0.1:5000** to access the hub.
+Visit **http://127.0.0.1:5000**. 
+
+> **Important**: Upon first run, the app will download approximately 4GB of model weights for Stable Diffusion. Ensure you have a stable internet connection for the initial setup.
 
 ---
 
 ## 📁 Project Structure
-- `app.py`: Unified server for both challenges.
-- `utils/`: Core logic modules.
-  - `empathy_engine.py`: Sentiment & parameter mapping.
+- `app.py`: Unified server with local storage management.
+- `utils/`: 100% local logic modules.
+  - `prompt_engine.py`: Local intelligent keyword expansion.
+  - `image_gen.py`: Local HF `diffusers` (CPU-optimized).
+  - `segment.py`: NLTK segmentation.
   - `voice_gen.py`: pyttsx3 voice synthesis.
-  - `segment.py`: NLTK narrative segmentation.
-  - `prompt_engine.py`: Gemini LLM logic.
-  - `image_gen.py`: Pollinations.AI API wrapper.
-- `templates/`: HTML5 UIs (Pitch Visualizer & Empathy Engine).
+- `static/output/`: Local storage for generated storyboard panels.
 
 ---
 
 ## 🛠 Tech Stack
 - **Python / Flask**
-- **NLTK** (Segmentation)
-- **VADER Sentiment** (Emotion)
-- **pyttsx3** (TTS)
-- **Google Gemini** (LLM)
-- **Pollinations.AI** (Image Gen)
+- **Hugging Face Diffusers** (Stable Diffusion v1.5)
+- **VADER Sentiment**
+- **pyttsx3**
+- **NLTK**
+- **Torch** (CPU / CUDA)

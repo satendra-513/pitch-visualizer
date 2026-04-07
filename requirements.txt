@@ -1,6 +1,12 @@
 flask
 nltk
 gunicorn
-google-generativeai
-python-dotenv
+vaderSentiment
+textblob
+pyttsx3
 requests
+Pillow
+diffusers
+transformers
+accelerate
+torch
