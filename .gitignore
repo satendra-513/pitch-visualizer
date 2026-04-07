@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+.venv
+env/
+venv/
+ENV/
+static/audio/voice_*.wav
+static/audio/voice_*.mp3
+.gemini/
+brain/

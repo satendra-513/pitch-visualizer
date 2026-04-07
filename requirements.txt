@@ -1,3 +1,6 @@
 flask
 nltk
 gunicorn
+google-generativeai
+python-dotenv
+requests
