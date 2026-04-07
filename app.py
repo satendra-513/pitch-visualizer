@@ -5,7 +5,7 @@ from flask import Flask, render_template, request, Response, stream_with_context
 from utils.segment import segment_text
 from utils.prompt_engine import enhance_prompt, STYLE_DESCRIPTORS
 from utils.image_gen import generate_image
-from utils.empathy_engine import detect_emotion, get_voice_parameters
+from utils.sentiment_engine import detect_emotion, get_voice_parameters
 from utils.voice_gen import generate_voice
 
 app = Flask(__name__)
@@ -25,9 +25,9 @@ STYLES = list(STYLE_DESCRIPTORS.keys())
 def home():
     return render_template("index.html", styles=STYLES)
 
-@app.route('/empathy')
-def empathy_ui():
-    return render_template("empathy.html")
+@app.route('/sentiment')
+def sentiment_ui():
+    return render_template("sentiment.html")
 
 # --- Pitch Visualizer Logic ---
 
@@ -70,11 +70,11 @@ def generate_stream():
         headers={'Cache-Control': 'no-cache', 'X-Accel-Buffering': 'no'}
     )
 
-# --- Empathy Engine Logic ---
+# --- Sentiment Engine Logic ---
 
-@app.route('/process-empathy', methods=['POST'])
-def process_empathy():
-    """API endpoint for local Empathy Engine."""
+@app.route('/process-sentiment', methods=['POST'])
+def process_sentiment():
+    """API endpoint for local Sentiment Engine."""
     text = request.form.get("text", "").strip()
     if not text:
         return json.dumps({"error": "No text provided"}), 400

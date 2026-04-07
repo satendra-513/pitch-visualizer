@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Empathy Engine — AI Human Voice 🎤</title>
+    <title>Sentiment Engine — AI Human Voice 🎤</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;700&display=swap"
@@ -268,21 +268,21 @@
 <body>
 
     <nav>
-        <div class="logo">✦ EMPATHY_GEN</div>
+        <div class="logo">✦ SENTIMENT_GEN</div>
         <div class="nav-links">
             <a href="/">Pitch Visualizer</a>
-            <a href="/empathy" class="active">Empathy Engine</a>
+            <a href="/sentiment" class="active">Sentiment Engine</a>
         </div>
     </nav>
 
     <header>
-        <h1>The Empathy Engine</h1>
+        <h1>The Sentiment Engine</h1>
         <p class="subtitle">AI that listens to your emotion and speaks with a human soul. Modulation of pitch, rate, and
             volume based on detected sentiment.</p>
     </header>
 
     <div class="main-card">
-        <form id="empathy-form">
+        <form id="sentiment-form">
             <label>Source Text</label>
             <textarea id="text-input"
                 placeholder="Type something emotional... e.g., 'I am so excited about this new opportunity!' or 'I'm very disappointed with the recent delays.'"></textarea>
@@ -315,7 +315,7 @@
     <footer>Built for Challenge 1 · Using VADER Sentiment & pyttsx3</footer>
 
     <script>
-        const form = document.getElementById('empathy-form');
+        const form = document.getElementById('sentiment-form');
         const btn = document.getElementById('submit-btn');
         const input = document.getElementById('text-input');
         const resultArea = document.getElementById('result-area');
@@ -337,7 +337,7 @@
             formData.append('text', text);
 
             try {
-                const response = await fetch('/process-empathy', { method: 'POST', body: formData });
+                const response = await fetch('/process-sentiment', { method: 'POST', body: formData });
                 const data = await response.json();
 
                 if (data.error) throw new Error(data.error);
